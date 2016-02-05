@@ -23,17 +23,17 @@ RUN cd proj-4.8.0 && ./configure
 RUN cd proj-4.8.0 && make
 RUN cd proj-4.8.0 && make install
 
-# GDAL
-RUN curl -s http://download.osgeo.org/gdal/2.0.2/gdal-2.0.2.tar.gz | tar zxv
-RUN cd gdal-2.0.2 && ./configure
-RUN cd gdal-2.0.2 && make
-RUN cd gdal-2.0.2 && make install
-
 # GEOS
 RUN curl -s http://download.osgeo.org/geos/geos-3.5.0.tar.bz2 | tar xvj
 RUN cd geos-3.5.0 && ./configure
 RUN cd geos-3.5.0 && make
 RUN cd geos-3.5.0 && make install
+
+# GDAL
+RUN curl -s http://download.osgeo.org/gdal/2.0.2/gdal-2.0.2.tar.gz | tar zxv
+RUN cd gdal-2.0.2 && ./configure
+RUN cd gdal-2.0.2 && make
+RUN cd gdal-2.0.2 && make install
 
 # MapServer & MapScript
 RUN curl -s http://download.osgeo.org/mapserver/mapserver-7.0.0.tar.gz | tar zxv
