@@ -2,8 +2,15 @@ FROM heroku/cedar:14
 
 #### GIS SECTION ####
 
+# Create working directory
 RUN mkdir /gissrc
 WORKDIR /gissrc
+
+# Create custom bin and lib paths and set env vars
+RUN mkdir -p /app/gis/lib
+RUN mkdir -p /app/gis/bin
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/app/gis/lib
+ENV PATH=$PATH:/app/gis/bin
 
 # CMAKE
 RUN curl -s https://cmake.org/files/v3.4/cmake-3.4.3.tar.gz | tar zxv
@@ -19,31 +26,28 @@ RUN cd swig-3.0.8 && make install
 
 # PROJ
 RUN curl -s http://download.osgeo.org/proj/proj-4.8.0.tar.gz | tar zxv
-RUN cd proj-4.8.0 && ./configure
+RUN cd proj-4.8.0 && ./configure --prefix=/app/gis
 RUN cd proj-4.8.0 && make
 RUN cd proj-4.8.0 && make install
 
 # GEOS
 RUN curl -s http://download.osgeo.org/geos/geos-3.5.0.tar.bz2 | tar xvj
-RUN cd geos-3.5.0 && ./configure
+RUN cd geos-3.5.0 && ./configure --prefix=/app/gis
 RUN cd geos-3.5.0 && make
 RUN cd geos-3.5.0 && make install
 
 # GDAL
 RUN curl -s http://download.osgeo.org/gdal/2.0.2/gdal-2.0.2.tar.gz | tar zxv
-RUN cd gdal-2.0.2 && ./configure
+RUN cd gdal-2.0.2 && ./configure --prefix=/app/gis
 RUN cd gdal-2.0.2 && make
 RUN cd gdal-2.0.2 && make install
 
 # MapServer & MapScript
 RUN curl -s http://download.osgeo.org/mapserver/mapserver-7.0.0.tar.gz | tar zxv
 RUN mkdir mapserver-7.0.0/build
-RUN cd mapserver-7.0.0/build && cmake -DWITH_PYTHON=ON -DWITH_FRIBIDI=0 -DWITH_FCGI=0 -DWITH_HARFBUZZ=0 -DWITH_GIF=0 .. > ../configure.log
+RUN cd mapserver-7.0.0/build && cmake -DCMAKE_INSTALL_PREFIX=/app/gis -DWITH_PYTHON=ON -DWITH_FRIBIDI=0 -DWITH_FCGI=0 -DWITH_HARFBUZZ=0 -DWITH_GIF=0 .. > ../configure.log
 RUN cd mapserver-7.0.0/build && make
 RUN cd mapserver-7.0.0/build && make install
-
-# Add local libraries to library path
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 #### HEROKU SECTION ####
 
