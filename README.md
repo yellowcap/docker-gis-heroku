@@ -8,4 +8,4 @@ a Nodejs install. It is a mixture between the
 [docker-python](https://github.com/heroku/docker-python) and
 [docker-nodejs](https://github.com/heroku/docker-nodejs) images.
 
-[Image available on Dockerhub](https://hub.docker.com/r/yellowcap/docker-heroku-gis/).
+[Image available on Dockerhub](https://hub.docker.com/r/yellowcap/docker-gis-heroku/).
